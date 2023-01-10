@@ -1,0 +1,4 @@
+mx0.mail.ovh.ca
+mx-in.g.apple.com
+smtp.google.com
+mx-aol.mail.gm0.yahoodns.net
