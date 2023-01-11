@@ -40,16 +40,18 @@ func main() {
 	srvs := readLines("dnsbl.txt")
 	for _, h := range hosts {
 		ips, err := net.LookupIP(h)
-		if err == nil {
-			ip := ips[0].String()
-			log.Println(fmt.Sprintf("Checking %s [%s]:", h, ip))
-			s := strings.Split(ip, ".")
-			ipr := fmt.Sprintf("%s.%s.%s.%s", s[3], s[2], s[1], s[0])
-			for _, srv := range srvs {
-				rec, err := net.LookupTXT(fmt.Sprintf("%s.%s", ipr, srv))
-				if err == nil {
-					log.Println(fmt.Sprintf("Response %s [%s] (%s): %s", h, ip, srv, rec))
-				}
+		if err != nil {
+			log.Println("Lookup error: " + err.Error())
+			continue
+		}
+		ip := ips[0].String()
+		log.Println(fmt.Sprintf("Checking %s [%s]:", h, ip))
+		s := strings.Split(ip, ".")
+		ipr := fmt.Sprintf("%s.%s.%s.%s", s[3], s[2], s[1], s[0])
+		for _, srv := range srvs {
+			rec, err := net.LookupTXT(fmt.Sprintf("%s.%s", ipr, srv))
+			if err == nil {
+				log.Println(fmt.Sprintf("Response %s [%s] (%s): %s", h, ip, srv, rec))
 			}
 		}
 	}
